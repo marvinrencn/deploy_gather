@@ -1,0 +1,15 @@
+# ============================= Filebeat Inputs =================================
+- type: log
+  paths:
+    - /var/log/messages
+    - /var/log/*.log
+  fields:
+    source_type: syslog
+- type: log
+  enabled: false
+  paths:
+    - /var/lib/docker/containers/*/*-json.log
+  fields:
+    source_type: docker
+
+

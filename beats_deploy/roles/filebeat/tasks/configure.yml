@@ -1,0 +1,11 @@
+---
+- name: Genereate filebeat.yml to filebeat directory
+  template: src=filebeat.yml.j2 dest={{ base_dir }}/filebeat/filebeat.yml mode=0755
+  notify:
+  - restart filebeat
+
+- name: Genereate filebeat input configure yml file
+  template: src=filebeat.inputs.yml.j2 dest={{ base_dir }}/filebeat/filebeat.inputs.default.yml mode=0755
+
+- name: Copy filebeat.service to system dir
+  template: src=filebeat.service.j2 dest=/usr/lib/systemd/system/filebeat.service mode=0644

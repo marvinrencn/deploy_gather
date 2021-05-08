@@ -1,0 +1,12 @@
+[myself]
+localhost ansible_python_interpreter=/home/renzq/anaconda3/bin/python
+
+[aiops]
+192.168.48.11 ansible_python_interpreter=/root/anaconda3/bin/python hostname=aiops04 ansible_ssh_user=root 
+
+
+[test]
+192.168.48.10 ansible_ssh_user=root
+192.168.48.11 ansible_ssh_user=root
+192.168.48.12 ansible_ssh_user=root
+192.168.48.15 ansible_ssh_user=root

@@ -1,0 +1,8 @@
+---
+
+- name: install beats to host
+  hosts: aiops
+  remote_user: root
+
+  roles:
+    - filebeat

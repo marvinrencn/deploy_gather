@@ -1,0 +1,93 @@
+
+
+# ============================= Filebeat Inputs =================================
+filebeat.config.inputs:
+  enabled: true
+  path: ${path.config}/filebeat.inputs.*.yml
+  reload.enabled: true
+  reload.period: 10s
+
+# ============================== Filebeat modules ==============================
+
+filebeat.config.modules:
+  # Glob pattern for configuration loading
+  path: ${path.config}/modules.d/*.yml
+
+  # Set to true to enable config reloading
+  reload.enabled: false
+
+  # Period on which files under path should be checked for changes
+  #reload.period: 10s
+
+# ======================= Elasticsearch template setting =======================
+setup.ilm.enabled: false
+setup.template.overwrite: true
+setup.template:
+  name: 'yulog'
+  pattern: 'yulog-*'
+  enabled: false
+
+setup.template.settings:
+  index.number_of_shards: 1
+  index.number_of_replicas: 0
+  #index.codec: best_compression
+  #_source.enabled: false
+
+# ---------------------------- Elasticsearch Output ----------------------------
+output.elasticsearch:
+  # Array of hosts to connect to.
+  hosts: ["192.168.48.12:9200"]
+  index: "yulog-%{[fields.source_type]}-%{+yyyy.MM.dd}"
+
+  # Protocol - either `http` (default) or `https`.
+  #protocol: "https"
+
+  # Authentication credentials - either API key or username/password.
+  #api_key: "id:api_key"
+  #username: "elastic"
+  #password: "changeme"
+
+# ------------------------------ Logstash Output -------------------------------
+#output.logstash:
+  # The Logstash hosts
+#  hosts: ["192.168.48.12:5043"]
+
+  # Optional SSL. By default is off.
+  # List of root certificates for HTTPS server verifications
+  #ssl.certificate_authorities: ["/etc/pki/root/ca.pem"]
+
+  # Certificate for SSL client authentication
+  #ssl.certificate: "/etc/pki/client/cert.pem"
+
+  # Client Certificate Key
+  #ssl.key: "/etc/pki/client/cert.key"
+# -----------------------------Kafka Output ----------------------------------
+#output.kafka:
+#  enabled: true
+#  hosts: ["192.168.48.10:6667","192.168.48.11:6667","192.168.48.12:6667"]
+#  topic: aiops_module_topic
+#  compression: gzip 
+#  required_acks: -1
+
+
+
+
+# ================================= Processors =================================
+processors:
+  - add_host_metadata:
+      when.not.contains.tags: forwarded
+  - add_cloud_metadata: ~
+  - add_docker_metadata: ~
+  - add_kubernetes_metadata: ~
+
+
+# ================================== Logging ===================================
+
+# Sets log level. The default log level is info.
+# Available log levels are: error, warning, info, debug
+#logging.level: debug
+
+# At debug level, you can selectively enable logging only for some components.
+# To enable all selectors use ["*"]. Examples of other selectors are "beat",
+# "publisher", "service".
+#logging.selectors: ["*"]
