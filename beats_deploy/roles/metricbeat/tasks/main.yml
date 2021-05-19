@@ -1,27 +1,8 @@
 ---
-- name: judge metricbeat dir is exits
-  shell: /usr/bin/ls /data/soft/metricbeat-7.12.1-linux-x86_64
-  ignore_errors: True
-  register: dir_exist_result
+- import_tasks: upload.yml
+- import_tasks: configure.yml
+- name: add system module
+  shell: ./metricbeat modules enable system chdir={{ base_dir }}/metricbeat
 
-- name: Copy and unarchive the metricbeat tar to dest host.
-  unarchive:
-    src: /home/renzq/Downloads/metricbeat-7.12.1-linux-x86_64.tar.gz
-    dest: /data/soft
-    mode: 0755
-    copy: yes
-  when: dir_exist_result is failure
-
-- name: Create metricbeat configure directory
-  file:
-    path: /data/soft/metricbeat-7.12.1-linux-x86_64/conf
-    state: directory
-
-- name: Create metricbeat configure file
-  template:
-    src: metricbeat.yml.j2
-    dest: /data/soft/metricbeat-7.12.1-linux-x86_64/conf/metricbeat.yml
-  
-- name: Start metricbeat
-  script: ../scripts/run.sh start chdir=/data/soft/metricbeat-7.12.1-linux-x86_64
-
+- name: start metricbeat
+  shell: systemctl daemon-reload && systemctl start metricbeat

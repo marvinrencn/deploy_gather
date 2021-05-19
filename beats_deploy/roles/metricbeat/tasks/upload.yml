@@ -1,0 +1,17 @@
+---
+- name: judge a metricbeat dir is exits
+  shell: ls {{ base_dir }}/metricbeat
+  ignore_errors: True
+  register: result
+
+- debug: var=result.failed
+
+- name: Unarchive metricbeat tar to target machine
+  unarchive: 
+    src: "{{ source_tar_file_directory }}/metricbeat-7.12.1-linux-x86_64.tar.gz"
+    dest: "{{ base_dir }}"
+  when: result.failed
+
+- name: Rename filebeat directory name
+  command: mv {{ base_dir }}/metricbeat-7.12.1-linux-x86_64 {{ base_dir }}/metricbeat
+  when: result.failed

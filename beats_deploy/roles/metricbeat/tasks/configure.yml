@@ -1,0 +1,9 @@
+---
+- name: Copy metricbeat.service to system dir
+  template: src=metricbeat.service.j2 dest=/usr/lib/systemd/system/metricbeat.service mode=0644
+
+- name: Genereate metricbeat.yml to filebeat directory
+  template: src=metricbeat.yml.j2 dest={{ base_dir }}/metricbeat/metricbeat.yml mode=0755
+  # notify:
+  # - restart metricbeat
+

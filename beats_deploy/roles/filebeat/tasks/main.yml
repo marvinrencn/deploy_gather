@@ -1,5 +1,5 @@
 ---
 - import_tasks: upload.yml
 - import_tasks: configure.yml
-- name: Start filebeat
-  script: start_filebeat.sh
+- name: start filebeat
+  shell: systemctl daemon-reload && systemctl start filebeat
